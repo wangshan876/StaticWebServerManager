@@ -32,7 +32,8 @@ namespace StaticWebServerManager
         {
             if (string.IsNullOrWhiteSpace(txtServerName.Text) ||
                 string.IsNullOrWhiteSpace(txtWebsiteDirectory.Text) ||
-                !int.TryParse(txtPort.Text, out int port) || port <= 0)
+                !int.TryParse(txtPort.Text, out int port) || port <= 0 ||
+                string.IsNullOrWhiteSpace(txtEntryPoint.Text))
             {
                 MessageBox.Show("请填写有效的服务器名、网站目录和端口。", "输入错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
@@ -42,7 +43,8 @@ namespace StaticWebServerManager
             {
                 Name = txtServerName.Text,
                 WebsiteDirectory = txtWebsiteDirectory.Text,
-                Port = port
+                Port = port,
+                EntryPoint = txtEntryPoint.Text
             };
             DialogResult = DialogResult.OK;
             Close();

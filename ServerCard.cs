@@ -22,6 +22,7 @@ namespace StaticWebServerManager
 
         public string WebsiteDirectory { get; set; }
         public int Port { get; set; } = 8080; // 默认端口设置为8080
+        public string EntryPoint { get; set; } = "index.html";
 
         public ServerCard()
         {
@@ -43,7 +44,7 @@ namespace StaticWebServerManager
             }
 
             // 服务器启动后，构建 index.html 的 URL
-            string url = $"http://localhost:{Port}/index.html";
+            string url = $"http://localhost:{Port}/{EntryPoint}";
 
             // 打开新的 WebView 窗体
             WebViewForm webViewForm = new WebViewForm(url);

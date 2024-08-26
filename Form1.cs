@@ -12,7 +12,7 @@ namespace StaticWebServerManager
         private const string DataFilePath = "servers.json";
         private List<Server> servers = new List<Server>();
         private NotifyIcon notifyIcon;
-        private bool isExiting = false; // ÓÃÓÚ±ê¼ÇÊÇ·ñÕıÔÚÍË³öÓ¦ÓÃ³ÌĞò
+        private bool isExiting = false; // ç”¨äºæ ‡è®°æ˜¯å¦æ­£åœ¨é€€å‡ºåº”ç”¨ç¨‹åº
 
         public Form1()
         {
@@ -22,20 +22,20 @@ namespace StaticWebServerManager
             this.ForeColor = System.Drawing.Color.White;
 
             btnAddServer.Click += BtnAddServer_Click;
-            LoadServers(); // ¼ÓÔØ·şÎñÆ÷Êı¾İ
+            LoadServers(); // åŠ è½½æœåŠ¡å™¨æ•°æ®
 
-            // ³õÊ¼»¯ NotifyIcon
+            // åˆå§‹åŒ– NotifyIcon
             notifyIcon = new NotifyIcon
             {
                 
-                Icon = this.Icon, // Ê¹ÓÃ×ÊÔ´ÖĞµÄÍ¼±ê
-                Visible = false // ³õÊ¼Ê±Òş²Ø
+                Icon = this.Icon, // ä½¿ç”¨èµ„æºä¸­çš„å›¾æ ‡
+                Visible = false // åˆå§‹æ—¶éšè—
             };
 
-            // Ìí¼ÓÍĞÅÌË«»÷ÊÂ¼ş
+            // æ·»åŠ æ‰˜ç›˜åŒå‡»äº‹ä»¶
             notifyIcon.DoubleClick += NotifyIcon_DoubleClick;
 
-            // ³õÊ¼»¯ÓÒ¼ü²Ëµ¥
+            // åˆå§‹åŒ–å³é”®èœå•
             InitializeContextMenu();
         }
 
@@ -80,7 +80,7 @@ namespace StaticWebServerManager
                     var server = form.Server;
                     servers.Add(server);
                     AddServerCard(server);
-                    SaveServers(); // ±£´æ·şÎñÆ÷Êı¾İ
+                    SaveServers(); // ä¿å­˜æœåŠ¡å™¨æ•°æ®
                 }
             }
         }
@@ -91,7 +91,8 @@ namespace StaticWebServerManager
             {
                 ServerName = server.Name,
                 WebsiteDirectory = server.WebsiteDirectory,
-                Port = server.Port
+                Port = server.Port,
+                EntryPoint = server.EntryPoint
             };
 
             serverCard.BackColor = System.Drawing.Color.FromArgb(50, 50, 50);
@@ -106,7 +107,7 @@ namespace StaticWebServerManager
 
         private void ToggleServer(Server server)
         {
-            MessageBox.Show(this, $"Toggled server: {server.Name}", "·şÎñÆ÷×´Ì¬", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            MessageBox.Show(this, $"Toggled server: {server.Name}", "æœåŠ¡å™¨çŠ¶æ€", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         private void EditServer(Server server)
@@ -119,11 +120,15 @@ namespace StaticWebServerManager
                     server.Name = form.Server.Name;
                     server.WebsiteDirectory = form.Server.WebsiteDirectory;
                     server.Port = form.Server.Port;
+                    server.EntryPoint = form.Server.EntryPoint;
 
                     var serverCard = flpServers.Controls.OfType<ServerCard>().FirstOrDefault(card => card.ServerName == server.Name);
                     if (serverCard != null)
                     {
                         serverCard.ServerName = server.Name;
+                        serverCard.EntryPoint = server.EntryPoint;
+                        serverCard.Port = server.Port;
+                        serverCard.Name = server.Name;
                     }
                 }
             }
@@ -133,7 +138,7 @@ namespace StaticWebServerManager
         {
             servers.Remove(server);
             flpServers.Controls.Remove(serverCard);
-            SaveServers(); // ±£´æ·şÎñÆ÷Êı¾İ
+            SaveServers(); // ä¿å­˜æœåŠ¡å™¨æ•°æ®
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -147,58 +152,58 @@ namespace StaticWebServerManager
             if (this.WindowState == FormWindowState.Minimized)
             {
                 this.Hide();
-                notifyIcon.Visible = true; // ÏÔÊ¾ÍĞÅÌÍ¼±ê
+                notifyIcon.Visible = true; // æ˜¾ç¤ºæ‰˜ç›˜å›¾æ ‡
             }
         }
 
         private void NotifyIcon_DoubleClick(object sender, EventArgs e)
         {
-            this.Show(); // ÏÔÊ¾´°Ìå
-            this.WindowState = FormWindowState.Normal; // »Ö¸´´°Ìå×´Ì¬
-            notifyIcon.Visible = false; // Òş²ØÍĞÅÌÍ¼±ê
+            this.Show(); // æ˜¾ç¤ºçª—ä½“
+            this.WindowState = FormWindowState.Normal; // æ¢å¤çª—ä½“çŠ¶æ€
+            notifyIcon.Visible = false; // éšè—æ‰˜ç›˜å›¾æ ‡
         }
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if (!isExiting) // Èç¹û²»ÊÇÍ¨¹ıÍĞÅÌ²Ëµ¥ÍË³ö£¬ÔòÈ¡Ïû¹Ø±ÕÊÂ¼ş
+            if (!isExiting) // å¦‚æœä¸æ˜¯é€šè¿‡æ‰˜ç›˜èœå•é€€å‡ºï¼Œåˆ™å–æ¶ˆå…³é—­äº‹ä»¶
             {
                 e.Cancel = true;
                 this.Hide();
-                notifyIcon.Visible = true; // ÏÔÊ¾ÍĞÅÌÍ¼±ê
+                notifyIcon.Visible = true; // æ˜¾ç¤ºæ‰˜ç›˜å›¾æ ‡
             }
         }
 
         private void InitializeContextMenu()
         {
-            // ´´½¨ÓÒ¼ü²Ëµ¥
+            // åˆ›å»ºå³é”®èœå•
             ContextMenuStrip contextMenu = new ContextMenuStrip();
 
-            // ´´½¨¡°´ò¿ª´°¿Ú¡±²Ëµ¥Ïî
-            ToolStripMenuItem menuItemOpen = new ToolStripMenuItem("´ò¿ª´°¿Ú");
-            menuItemOpen.Click += MenuItemOpen_Click; // °ó¶¨ÊÂ¼ş
+            // åˆ›å»ºâ€œæ‰“å¼€çª—å£â€èœå•é¡¹
+            ToolStripMenuItem menuItemOpen = new ToolStripMenuItem("æ‰“å¼€çª—å£");
+            menuItemOpen.Click += MenuItemOpen_Click; // ç»‘å®šäº‹ä»¶
             contextMenu.Items.Add(menuItemOpen);
 
-            // ´´½¨¡°¹Ø±Õ¡±²Ëµ¥Ïî
-            ToolStripMenuItem menuItemExit = new ToolStripMenuItem("¹Ø±Õ");
-            menuItemExit.Click += MenuItemExit_Click; // °ó¶¨ÊÂ¼ş
+            // åˆ›å»ºâ€œå…³é—­â€èœå•é¡¹
+            ToolStripMenuItem menuItemExit = new ToolStripMenuItem("å…³é—­");
+            menuItemExit.Click += MenuItemExit_Click; // ç»‘å®šäº‹ä»¶
             contextMenu.Items.Add(menuItemExit);
 
-            // ½«ÓÒ¼ü²Ëµ¥·ÖÅä¸ø NotifyIcon
+            // å°†å³é”®èœå•åˆ†é…ç»™ NotifyIcon
             notifyIcon.ContextMenuStrip = contextMenu;
         }
 
         private void MenuItemOpen_Click(object sender, EventArgs e)
         {
-            this.Show(); // ÏÔÊ¾´°Ìå
-            this.WindowState = FormWindowState.Normal; // »Ö¸´´°Ìå×´Ì¬
-            notifyIcon.Visible = false; // Òş²ØÍĞÅÌÍ¼±ê
+            this.Show(); // æ˜¾ç¤ºçª—ä½“
+            this.WindowState = FormWindowState.Normal; // æ¢å¤çª—ä½“çŠ¶æ€
+            notifyIcon.Visible = false; // éšè—æ‰˜ç›˜å›¾æ ‡
         }
 
         private void MenuItemExit_Click(object sender, EventArgs e)
         {
-            isExiting = true; // ÉèÖÃ±ê¼ÇÎªÕıÔÚÍË³ö
-            notifyIcon.Visible = false; // Òş²ØÍĞÅÌÍ¼±ê
-            Application.Exit(); // ÍË³öÓ¦ÓÃ³ÌĞò
+            isExiting = true; // è®¾ç½®æ ‡è®°ä¸ºæ­£åœ¨é€€å‡º
+            notifyIcon.Visible = false; // éšè—æ‰˜ç›˜å›¾æ ‡
+            Application.Exit(); // é€€å‡ºåº”ç”¨ç¨‹åº
         }
     }
 
@@ -207,5 +212,6 @@ namespace StaticWebServerManager
         public string Name { get; set; }
         public string WebsiteDirectory { get; set; }
         public int Port { get; set; }
+        public string EntryPoint { get; set; }
     }
 }

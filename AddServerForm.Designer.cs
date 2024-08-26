@@ -7,11 +7,13 @@
         private System.Windows.Forms.TextBox txtServerName;
         private System.Windows.Forms.TextBox txtWebsiteDirectory;
         private System.Windows.Forms.TextBox txtPort;
+        private System.Windows.Forms.TextBox txtEntryPoint;
         private System.Windows.Forms.Button btnCreate;
         private System.Windows.Forms.Button btnBrowse;
         private System.Windows.Forms.Label lblServerName;
         private System.Windows.Forms.Label lblWebsiteDirectory;
         private System.Windows.Forms.Label lblPort;
+        private System.Windows.Forms.Label lblEntryPoint;
 
         protected override void Dispose(bool disposing)
         {
@@ -32,13 +34,15 @@
             lblServerName = new Label();
             lblWebsiteDirectory = new Label();
             lblPort = new Label();
+            txtEntryPoint = new TextBox();
+            lblEntryPoint = new Label();
             btnDelete = new Button();
             SuspendLayout();
             // 
             // txtServerName
             // 
             txtServerName.BackColor = SystemColors.InactiveCaption;
-            txtServerName.Location = new Point(191, 69);
+            txtServerName.Location = new Point(191, 42);
             txtServerName.Name = "txtServerName";
             txtServerName.Size = new Size(296, 32);
             txtServerName.TabIndex = 0;
@@ -46,7 +50,7 @@
             // txtWebsiteDirectory
             // 
             txtWebsiteDirectory.BackColor = SystemColors.InactiveCaption;
-            txtWebsiteDirectory.Location = new Point(191, 129);
+            txtWebsiteDirectory.Location = new Point(191, 102);
             txtWebsiteDirectory.Name = "txtWebsiteDirectory";
             txtWebsiteDirectory.Size = new Size(200, 32);
             txtWebsiteDirectory.TabIndex = 1;
@@ -54,7 +58,7 @@
             // txtPort
             // 
             txtPort.BackColor = SystemColors.InactiveCaption;
-            txtPort.Location = new Point(191, 185);
+            txtPort.Location = new Point(191, 158);
             txtPort.Name = "txtPort";
             txtPort.Size = new Size(296, 32);
             txtPort.TabIndex = 2;
@@ -63,7 +67,7 @@
             // 
             btnCreate.BackColor = SystemColors.InactiveCaptionText;
             btnCreate.FlatStyle = FlatStyle.Flat;
-            btnCreate.Location = new Point(155, 262);
+            btnCreate.Location = new Point(72, 298);
             btnCreate.Name = "btnCreate";
             btnCreate.Size = new Size(144, 45);
             btnCreate.TabIndex = 3;
@@ -74,7 +78,7 @@
             // 
             btnBrowse.BackColor = SystemColors.Desktop;
             btnBrowse.FlatStyle = FlatStyle.Flat;
-            btnBrowse.Location = new Point(397, 129);
+            btnBrowse.Location = new Point(397, 102);
             btnBrowse.Name = "btnBrowse";
             btnBrowse.Size = new Size(90, 34);
             btnBrowse.TabIndex = 4;
@@ -84,8 +88,8 @@
             // lblServerName
             // 
             lblServerName.AutoSize = true;
-            lblServerName.BackColor = System.Drawing.Color.FromArgb(50, 60, 50);
-            lblServerName.Location = new Point(72, 72);
+            lblServerName.BackColor = Color.FromArgb(50, 60, 50);
+            lblServerName.Location = new Point(72, 45);
             lblServerName.Name = "lblServerName";
             lblServerName.Size = new Size(93, 25);
             lblServerName.TabIndex = 5;
@@ -94,8 +98,8 @@
             // lblWebsiteDirectory
             // 
             lblWebsiteDirectory.AutoSize = true;
-            lblWebsiteDirectory.BackColor = System.Drawing.Color.FromArgb(50, 60, 50);
-            lblWebsiteDirectory.Location = new Point(72, 129);
+            lblWebsiteDirectory.BackColor = Color.FromArgb(50, 60, 50);
+            lblWebsiteDirectory.Location = new Point(72, 102);
             lblWebsiteDirectory.Name = "lblWebsiteDirectory";
             lblWebsiteDirectory.Size = new Size(93, 25);
             lblWebsiteDirectory.TabIndex = 6;
@@ -104,18 +108,36 @@
             // lblPort
             // 
             lblPort.AutoSize = true;
-            lblPort.BackColor = System.Drawing.Color.FromArgb(50, 60, 50);
-            lblPort.Location = new Point(110, 188);
+            lblPort.BackColor = Color.FromArgb(50, 60, 50);
+            lblPort.Location = new Point(110, 161);
             lblPort.Name = "lblPort";
             lblPort.Size = new Size(55, 25);
             lblPort.TabIndex = 7;
             lblPort.Text = "端口:";
             // 
+            // txtEntryPoint
+            // 
+            txtEntryPoint.BackColor = SystemColors.InactiveCaption;
+            txtEntryPoint.Location = new Point(191, 214);
+            txtEntryPoint.Name = "txtEntryPoint";
+            txtEntryPoint.Size = new Size(296, 32);
+            txtEntryPoint.TabIndex = 9;
+            // 
+            // lblEntryPoint
+            // 
+            lblEntryPoint.AutoSize = true;
+            lblEntryPoint.BackColor = Color.FromArgb(50, 60, 50);
+            lblEntryPoint.Location = new Point(72, 217);
+            lblEntryPoint.Name = "lblEntryPoint";
+            lblEntryPoint.Size = new Size(93, 25);
+            lblEntryPoint.TabIndex = 10;
+            lblEntryPoint.Text = "入口文件:";
+            // 
             // btnDelete
             // 
             btnDelete.BackColor = SystemColors.InactiveCaptionText;
             btnDelete.FlatStyle = FlatStyle.Flat;
-            btnDelete.Location = new Point(330, 262);
+            btnDelete.Location = new Point(330, 298);
             btnDelete.Name = "btnDelete";
             btnDelete.Size = new Size(157, 45);
             btnDelete.TabIndex = 8;
@@ -133,6 +155,8 @@
             Controls.Add(btnBrowse);
             Controls.Add(btnCreate);
             Controls.Add(txtPort);
+            Controls.Add(lblEntryPoint);
+            Controls.Add(txtEntryPoint);
             Controls.Add(txtWebsiteDirectory);
             Controls.Add(txtServerName);
             ForeColor = SystemColors.ButtonHighlight;
