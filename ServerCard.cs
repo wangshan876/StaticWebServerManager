@@ -13,6 +13,7 @@ namespace StaticWebServerManager
 
         private HttpListener httpListener;
         private bool isRunning;
+        private Process scriptProcess; // 保存脚本进程的引用
 
         public string ServerName
         {
@@ -20,9 +21,29 @@ namespace StaticWebServerManager
             set => lblServerName.Text = value;
         }
 
-        public string WebsiteDirectory { get; set; }
-        public int Port { get; set; } = 8080; // 默认端口设置为8080
-        public string EntryPoint { get; set; } = "index.html";
+        public string WebsiteDirectory { get; set; } = "";
+        public int Port { get; set; } = 8080; 
+        public string EntryPoint  { get; set; } = "index.html";
+
+        public string Cmd { get; set; } = "";
+        private bool _isScriptMode;
+        public bool isScriptMode
+        {
+            get => _isScriptMode;
+            set
+            {
+                _isScriptMode = value;
+                btnOpenInWebView.Visible = !value; 
+
+                if (value)
+                {
+                    lblServerName.Text = ServerName + "  （Script Server模式）"; 
+                } else
+                {
+                    lblServerName.Text = ServerName + " ： " + $"http://localhost:{Port}/{EntryPoint}";
+                }
+            }
+        }
 
         public ServerCard()
         {
@@ -35,7 +56,12 @@ namespace StaticWebServerManager
             btnEdit.Click += (s, e) => OnEditClicked?.Invoke(this, e);
             btnDelete.Click += (s, e) => OnDeleteClicked?.Invoke(this, e);
             btnOpenInWebView.Click += (s, e) => OpenInWebView();
+            if(this.isScriptMode == true)
+            {
+                  btnOpenInWebView.Visible = false;
+            }
         }
+
         private void OpenInWebView()
         {
             if (!isRunning)
@@ -116,16 +142,25 @@ namespace StaticWebServerManager
                 // 注册 URL 访问权限
                 RegisterUrlAcl(Port);
 
-                httpListener = new HttpListener();
-                httpListener.Prefixes.Add($"http://*:{Port}/");
-                httpListener.Start();
-                isRunning = true;
-                btnStartStop.Text = "停止";
+                if (isScriptMode == true)
+                {
+                    // 如果是脚本模式，执行 Cmd
+                    StartScript();
+                }
+                else
+                {
+                    // 否则，启动 HTTP 监听器
+                    httpListener = new HttpListener();
+                    httpListener.Prefixes.Add($"http://*:{Port}/");
+                    httpListener.Start();
+                    isRunning = true;
+                    btnStartStop.Text = "停止";
 
-                System.Threading.Thread listenerThread = new System.Threading.Thread(HandleRequests);
-                listenerThread.Start();
+                    System.Threading.Thread listenerThread = new System.Threading.Thread(HandleRequests);
+                    listenerThread.Start();
 
-                MessageBox.Show(this, $"服务器 {ServerName} 已启动，监听端口 {Port}。", "服务器启动", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    MessageBox.Show(this, $" {ServerName} 已启动，监听端口 {Port}。", "服务器启动", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
             }
             catch (HttpListenerException httpEx)
             {
@@ -137,16 +172,68 @@ namespace StaticWebServerManager
             }
         }
 
+        private void StartScript()
+        {
+            // 创建进程启动信息
+            ProcessStartInfo processStartInfo = new ProcessStartInfo
+            {
+                FileName = "cmd.exe",
+                Arguments = $"/c {Cmd}", // 使用 /c 执行命令并关闭
+                RedirectStandardOutput = true,
+                RedirectStandardError = true,
+                UseShellExecute = false,
+                CreateNoWindow = true // 不打开窗口
+            };
+
+            // 启动进程并保存引用
+            scriptProcess = new Process
+            {
+                StartInfo = processStartInfo
+            };
+
+            scriptProcess.Start();
+            isRunning = true;
+            btnStartStop.Text = "停止";
+
+            MessageBox.Show(this, $"脚本命令已执行: {Cmd}", "脚本启动", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
         private void StopServer()
         {
-            if (httpListener != null)
+            if (isScriptMode == true)
+            {
+                // 如果是脚本模式，执行清理任务
+                StopScript();
+            }
+            else if (httpListener != null)
             {
                 httpListener.Stop();
                 httpListener.Close();
                 httpListener = null;
                 isRunning = false;
                 btnStartStop.Text = "启动";
-                MessageBox.Show($"服务器 {ServerName} 已停止。", "服务器停止", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show($" {ServerName} 已停止。", "服务器停止", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+        }
+
+        private void StopScript()
+        {
+            if (scriptProcess != null && !scriptProcess.HasExited)
+            {
+                try
+                {
+                    // Terminate the script process
+                    scriptProcess.Kill();
+                    scriptProcess.Dispose(); // Release resources
+                    scriptProcess = null; // Clear reference
+                    isRunning = false;
+                    btnStartStop.Text = "启动";
+                    MessageBox.Show("脚本已停止。", "脚本停止", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"停止脚本时出错: {ex.Message}", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             }
         }
 
@@ -219,6 +306,5 @@ namespace StaticWebServerManager
                 }
             }
         }
-
     }
 }

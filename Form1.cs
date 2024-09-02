@@ -92,7 +92,9 @@ namespace StaticWebServerManager
                 ServerName = server.Name,
                 WebsiteDirectory = server.WebsiteDirectory,
                 Port = server.Port,
-                EntryPoint = server.EntryPoint
+                EntryPoint = server.EntryPoint,
+                isScriptMode = server.isScriptMode,
+                Cmd = server.Cmd,
             };
 
             serverCard.BackColor = System.Drawing.Color.FromArgb(50, 50, 50);
@@ -107,7 +109,7 @@ namespace StaticWebServerManager
 
         private void ToggleServer(Server server)
         {
-            MessageBox.Show(this, $"Toggled server: {server.Name}", "服务器状态", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            //MessageBox.Show(this, $"Toggled server: {server.Name}", "服务器状态", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         private void EditServer(Server server)
@@ -191,7 +193,14 @@ namespace StaticWebServerManager
             // 将右键菜单分配给 NotifyIcon
             notifyIcon.ContextMenuStrip = contextMenu;
         }
-
+        // 添加一个方法来恢复窗口
+        public void RestoreWindow()
+        {
+            this.Show();
+            this.WindowState = FormWindowState.Normal; // 恢复窗口状态
+            notifyIcon.Visible = false; // 隐藏托盘图标
+            this.Activate(); // 激活窗口
+        }
         private void MenuItemOpen_Click(object sender, EventArgs e)
         {
             this.Show(); // 显示窗体
@@ -209,9 +218,12 @@ namespace StaticWebServerManager
 
     public class Server
     {
+        public bool isScriptMode { get; set; }
         public string Name { get; set; }
         public string WebsiteDirectory { get; set; }
         public int Port { get; set; }
         public string EntryPoint { get; set; }
+
+        public string Cmd { get; set; }
     }
 }
