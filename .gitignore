@@ -1,0 +1,46 @@
+# Visual Studio
+.vs/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Build results
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+[Aa][Rr][Mm]/
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+
+# NuGet Packages
+*.nupkg
+*.snupkg
+packages/
+*.nuspec
+
+# Visual Studio Code
+.vscode/
+
+# Rider
+.idea/
+
+# User-specific files
+*.sln.ide
+*.sln.user
+*.sln.docstates
+
+# Temporary files
+*.tmp
+*.temp
+*.log
+*.cache
+*.pid
+*.seed
+
+# Other files
+Thumbs.db
+ehthumbs.db
+Desktop.ini
